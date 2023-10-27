@@ -1,0 +1,29 @@
+[
+    {
+        "type": "static-analysis",
+        "result": {
+            "vulnerabilities": 0,
+            "warning": 2,
+            "code_smells": 4
+        },
+        "user": "developer-1"
+    },
+    {
+        "type": "static-analysis",
+        "result": {
+            "vulnerabilities": 0,
+            "warning": 4,
+            "code_smells": 3
+        },
+        "user": "developer-2"
+    },
+    {
+        "type": "static-analysis",
+        "result": {
+            "vulnerabilities": 1,
+            "warning": 0,
+            "code_smells": 0
+        },
+        "user": "developer-3"
+    }
+]
