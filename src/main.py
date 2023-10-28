@@ -18,6 +18,8 @@ _FILE_KEY = "private-key.pem"
 _ENCRYPT_ALGO = "sha256"
 _ENCRYPT_padding = "PKCS1v15"
 
+_ATTESATION_DICKEYS_DATA = "payload"
+_ATTESATION_DICKEYS_SIGN = "signature"
 # attestation
 """
 "type": "static-analysis",
@@ -41,6 +43,11 @@ _ENCRYPT_padding = "PKCS1v15"
 # []
 
 
+# testing examples purpose
+def test_verify():
+    pass
+
+
 def load_key():
     with open(_FILE_KEY, "rb") as key_file:
         private_key = serialization.load_pem_private_key(
@@ -53,13 +60,13 @@ def load_key():
 # sign
 # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#signing
 def sign_attesation(private_key, _attesation: dict) -> dict:
-    print(_attesation["user"])
-    print()
-    signature = private_key.sign(
-        _attesation,
-        padding.PKCS1v15,
-        hashes.SHA256(),
-    )
+    # print(_attesation["user"])
+
+    _padding = padding.PKCS1v15()
+
+    signature = private_key.sign(_attesation, _padding, hashes.SHA256())
+
+    return signature
 
 
 # Run as scritp but able to load as module
@@ -74,13 +81,17 @@ if __name__ == "__main__":
     with open(_FILE_INPUT, mode="r") as file:
         _data = json.load(file)
         print(type(file))
-        # _json_str = json.dumps(_data, indent=4)
-
-    # print(_json_str)
-    # print(_data)
 
     _private_key = load_key()
 
     for _attesation in _data:
         print(_attesation)
-        sign_attesation(_private_key, _attesation)
+        user_encode_data = json.dumps(_attesation, indent=2).encode("utf-8")
+        print(user_encode_data)
+        signature = sign_attesation(_private_key, user_encode_data)
+        print(signature)
+        # print(json.loads(signature.decode("utf-8")))
+
+        __aux_attesation = dict()
+
+        __aux_attesation[]
