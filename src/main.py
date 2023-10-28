@@ -61,28 +61,47 @@ def sign_attesation(private_key, _attesation: dict) -> dict:
     return signature
 
 
+def write_attestation(__attesations: str, __filename=_FILE_OUTPUT) -> None:
+    with open(__filename, mode="w") as file:
+        file.write((__attesations))
+
+
+def read_control_inputs(__filename=_FILE_INPUT) -> dict:
+    # Context managers are a good try/catch practice
+    # we do not need write access to the input, just read
+    # The process can be use as script
+    with open(__filename, mode="r") as file:
+        _data = json.load(file)
+
+    return _data
+
+
 # Run as scritp but able to load as module
 # https://realpython.com/run-python-scripts/
 if __name__ == "__main__":
     # the final list of the attestations write to the file
     attestations = []
 
-    # Context managers are a good try/catch practice
-    # we do not need write access to the input, just read
-    # The process can be use as script
-    with open(_FILE_INPUT, mode="r") as file:
-        _data = json.load(file)
+    _data = read_control_inputs()
 
     _private_key = load_key()
 
     for _attesation in _data:
-        user_encode_data = json.dumps(_attesation, indent=4).encode("utf-8")
+        # user_encode_data just for the sign generation
+        control_data = json.dumps(_attesation, indent=4)
+
+        user_encode_data = control_data.encode("utf-8")
         signature = sign_attesation(_private_key, user_encode_data)
 
         __aux_attesation = dict()
-        __aux_attesation[_ATTESATION_DICKEYS_DATA] = user_encode_data
+
+        # control data pretty formated
+        __aux_attesation[_ATTESATION_DICKEYS_DATA] = control_data
+
         __aux_attesation[_ATTESATION_DICKEYS_SIGN] = signature
+
+        print(__aux_attesation)
 
         attestations.append(__aux_attesation)
 
-    print(attestations)
+    write_attestation(str(attestations), _FILE_OUTPUT)
