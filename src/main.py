@@ -47,20 +47,17 @@ def load_key():
             key_file.read(),
             password=None,
         )
-    print(private_key)
+    return private_key
 
 
-def encrypt_attesation(key: str, _attesation: dict) -> dict:
-    print("Hello from def")
+# sign
+# https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#signing
+def sign_attesation(private_key, _attesation: dict) -> dict:
     print(_attesation["user"])
     print()
-    message = b"A message I want to sign"
     signature = private_key.sign(
-        message,
-        padding.PSS(
-            mgf=padding.MGF1(hashes.SHA256()),
-            salt_length=padding.PSS.MAX_LENGTH,
-        ),
+        _attesation,
+        padding.PKCS1v15,
         hashes.SHA256(),
     )
 
@@ -82,9 +79,8 @@ if __name__ == "__main__":
     # print(_json_str)
     # print(_data)
 
-    load_key()
+    _private_key = load_key()
 
     for _attesation in _data:
-        # print(_attesation)
-        # encrypt_attesation(_attesation)
-        print("x")
+        print(_attesation)
+        sign_attesation(_private_key, _attesation)
