@@ -20,6 +20,7 @@ _ENCRYPT_padding = "PKCS1v15"
 
 _ATTESATION_DICKEYS_DATA = "payload"
 _ATTESATION_DICKEYS_SIGN = "signature"
+
 # attestation
 """
 "type": "static-analysis",
@@ -32,20 +33,13 @@ _ATTESATION_DICKEYS_SIGN = "signature"
 """
 
 # attestation_list json keys
+# file output
 """{
 "payload" : {},
 "signature": ""
 "
 }
 """
-
-# file output
-# []
-
-
-# testing examples purpose
-def test_verify():
-    pass
 
 
 def load_key():
@@ -60,8 +54,6 @@ def load_key():
 # sign
 # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#signing
 def sign_attesation(private_key, _attesation: dict) -> dict:
-    # print(_attesation["user"])
-
     _padding = padding.PKCS1v15()
 
     signature = private_key.sign(_attesation, _padding, hashes.SHA256())
@@ -80,18 +72,17 @@ if __name__ == "__main__":
     # The process can be use as script
     with open(_FILE_INPUT, mode="r") as file:
         _data = json.load(file)
-        print(type(file))
 
     _private_key = load_key()
 
     for _attesation in _data:
-        print(_attesation)
-        user_encode_data = json.dumps(_attesation, indent=2).encode("utf-8")
-        print(user_encode_data)
+        user_encode_data = json.dumps(_attesation, indent=4).encode("utf-8")
         signature = sign_attesation(_private_key, user_encode_data)
-        print(signature)
-        # print(json.loads(signature.decode("utf-8")))
 
         __aux_attesation = dict()
+        __aux_attesation[_ATTESATION_DICKEYS_DATA] = user_encode_data
+        __aux_attesation[_ATTESATION_DICKEYS_SIGN] = signature
 
-        __aux_attesation[]
+        attestations.append(__aux_attesation)
+
+    print(attestations)
