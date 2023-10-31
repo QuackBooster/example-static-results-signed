@@ -29,7 +29,7 @@ def load_key():
 
 # sign
 # https://cryptography.io/en/latest/hazmat/primitives/asymmetric/rsa/#signing
-def sign_attesation(private_key, _attesation: dict) -> dict:
+def sign_attesation(private_key, _attesation):
     _padding = padding.PKCS1v15()
     signature = private_key.sign(_attesation, _padding, hashes.SHA256())
 
@@ -62,17 +62,11 @@ if __name__ == "__main__":
     _private_key = load_key()
 
     for _attesation in _data:
-        print(type(_attesation))
-        print(_attesation)
-
         # user_encode_data just for the sign generation
         control_data = json.dumps(_attesation)
-        print(type(control_data))
-        print(control_data)
 
         user_encode_data = control_data.encode("utf-8")
-        print(type(control_data))
-        print(control_data)
+
         signature = sign_attesation(_private_key, user_encode_data)
 
         __aux_attesation = dict()
@@ -80,7 +74,7 @@ if __name__ == "__main__":
         # control data pretty formated
         __aux_attesation[_ATTESATION_DICKEYS_DATA] = control_data
 
-        __aux_attesation[_ATTESATION_DICKEYS_SIGN] = signature
+        __aux_attesation[_ATTESATION_DICKEYS_SIGN] = str(signature.hex())
 
         attestations.append(__aux_attesation)
 
