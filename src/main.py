@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # Shellbang | https://realpython.com/python-shebang/
 
-import base64
 import json
 
 from cryptography.hazmat.primitives import hashes
@@ -63,13 +62,18 @@ if __name__ == "__main__":
     _private_key = load_key()
 
     for _attesation in _data:
+        print(type(_attesation))
+        print(_attesation)
+
         # user_encode_data just for the sign generation
-        control_data = json.dumps(_attesation, indent=4)
+        control_data = json.dumps(_attesation)
+        print(type(control_data))
+        print(control_data)
 
         user_encode_data = control_data.encode("utf-8")
+        print(type(control_data))
+        print(control_data)
         signature = sign_attesation(_private_key, user_encode_data)
-
-        result = base64.b64encode(signature).decode()
 
         __aux_attesation = dict()
 
